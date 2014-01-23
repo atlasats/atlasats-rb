@@ -13,7 +13,8 @@ class AtlasClient
   end
   
   def with_auth(body=nil, &block)
-    block.call(body.nil? ? @options : @options.merge(:body => body))
+    r = block.call(body.nil? ? @options : @options.merge(:body => body))
+		r.parsed_response
   end
   
   def place_market_order(side, quantity)
