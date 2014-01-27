@@ -17,3 +17,6 @@ Place Limit Order Buy 10 Bitcoins (BTC) @ $800/each
 
 	order = client.place_limit_order("BTC", "USD", "BUY", 10.00, 800.00)
 
+Cancel Order
+
+	client.cancel

@@ -52,7 +52,7 @@ class AtlasClient
   def subscribe_quotes(&block)
     Thread.new do
       EM.run {
-        client = Faye::Client.new("http://data.#{@baseuri}/api")
+        client = Faye::Client.new("https://#{@baseuri}:4000/api")
         client.subscribe("/quotes") do |msg|
           block.call(msg)
         end
@@ -63,7 +63,7 @@ class AtlasClient
   def subscribe_trades(&block)
     Thread.new do
       EM.run {
-        client = Faye::Client.new("http://data.#{@baseuri}/api")
+        client = Faye::Client.new("https://#{@baseuri}:4000/api")
         client.subscribe("/trades") do |msg|
           block.call(msg)
         end
