@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = "atlasats"
-  s.version     = "1.0.2"
-  s.date        = "2014-01-27"
+  s.version     = "1.0.3"
+  s.date        = "2014-03-11"
   s.summary     = "Atlas ATS ruby library."
   s.description = "Atlas ATS ruby library. Gives access to order placement and market data."
   s.authors     = ["Habeel Ahmed"]

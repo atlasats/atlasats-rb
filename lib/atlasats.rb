@@ -70,6 +70,17 @@ class AtlasClient
       }
     end
   end
+  
+  def subscribe_book_updates(&block)
+    Thread.new do
+      EM.run {
+        client = Faye::Client.new("https://#{@baseuri}:4000/api")
+        client.subscribe("/market/*") do |msg|
+          block.call(msg)
+        end
+      }
+    end
+  end
 end
 
 class AtlasAdvancedClient < AtlasClient
