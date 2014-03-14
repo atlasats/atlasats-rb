@@ -33,3 +33,14 @@ Get Information on an Order
 
 	client.order_info(orderid)
 	
+Subscribe to all trades
+	
+	client.subscribe_trades do |trade|
+		# do something with trade
+	end
+	
+Subscribe to Book updates for a symbol
+	
+	client.subscribe_book_updates "BTC", "USD" do |book_update|
+		# do something with the book update
+	end
