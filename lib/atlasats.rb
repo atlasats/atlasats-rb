@@ -4,6 +4,7 @@ require 'eventmachine'
 require 'httparty'
 require 'faye'
 require 'json'
+require 'time'
 
 class AtlasClient
 	include HTTParty
@@ -18,8 +19,8 @@ class AtlasClient
 		r.parsed_response
 	end
 	
-	def place_market_order(side, quantity)
-		with_auth :side => side, :quantity => quantity, :type => "market" do |options|
+	def place_market_order(item, currency, side, quantity)
+		with_auth :item => convert(item), :currency => currency, :side => side, :quantity => quantity, :type => "market" do |options|
 			self.class.post("/api/v1/orders", options)
 		end
 	end
