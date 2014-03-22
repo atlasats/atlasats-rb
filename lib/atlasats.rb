@@ -20,13 +20,13 @@ class AtlasClient
 	end
 	
 	def place_market_order(item, currency, side, quantity)
-		with_auth :item => convert(item), :currency => currency, :side => side, :quantity => quantity, :type => "market" do |options|
+		with_auth :item => item, :currency => currency, :side => side, :quantity => quantity, :type => "market" do |options|
 			self.class.post("/api/v1/orders", options)
 		end
 	end
 	
 	def place_limit_order(item, currency, side, quantity, price)
-		with_auth :item => convert(item), :currency => currency, :side => side, :quantity => quantity, :type => "limit", :price => price do |options|
+		with_auth :item => item, :currency => currency, :side => side, :quantity => quantity, :type => "limit", :price => price do |options|
 			self.class.post("/api/v1/orders", options)
 		end
 	end
@@ -93,24 +93,6 @@ class AtlasClient
 				end
 			}
 		end
-	end
-
-	private
-
-	## parse this: 			BTC Call 700 Mar 2014
-	# and generate this: 	BTC 20140331C 700.000
-	# (for option symbols)
-	def convert(symbol)
-		tokens = symbol.split(' ')
-		if tokens.length == 5
-			undly = tokens[0]
-			type = tokens[1][0]
-			strike = format("%.3f", tokens[2].to_f)
-			exp = (Date.strptime(tokens[3] + ' ' + tokens[4],"%b %Y") >> 1).prev_day
-			expstr = exp.year.to_s + exp.month.to_s.rjust(2, '0') + exp.day.to_s.rjust(2, '0')
-			return undly + ' ' + expstr + type + ' ' + strike.to_s
-		end
-		symbol
 	end
 end
 
