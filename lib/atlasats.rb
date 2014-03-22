@@ -49,6 +49,19 @@ class AtlasClient
 			self.class.get('/api/v1/account', options)
 		end
 	end
+
+	# market data
+	def book(item, currency)
+		with_auth :item => item, :currency => currency do
+			self.class.get('/api/v1/market/book')
+		end
+	end
+
+	def recent_trades(item, currency)
+		with_auth :item => item, :currency => currency do
+			self.class.get('/api/v1/market/trades/recent')
+		end
+	end
 	
 	# market data
 	def subscribe_quotes(&block)
@@ -95,16 +108,3 @@ class AtlasClient
 		end
 	end
 end
-
-
-class AtlasAdvancedClient < AtlasClient
-	def cancel_all_orders()
-		account = account_info
-		orders = account["orders"]
-		orders.each do |order|
-			cancel_order(order)
-		end
-	end
-end
-
-
