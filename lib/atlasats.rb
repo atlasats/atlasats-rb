@@ -10,7 +10,15 @@ class AtlasClient
 	include HTTParty
 	
 	def initialize(buri, apikey)
-		@baseuri = buri
+		# strip out 'http://' or 'https://' since it's no longer the user's choice
+		cleanuri = buri.gsub(/http:\/\/|https:\/\//, '')
+		## Only production environments require HTTPS
+		# Use HTTP if the base URI matches either:
+		# - 'test.*' OR
+		# - 'dev.*'
+		prefix = /^test\.|^dev\./.match(cleanuri).nil? ? 'https://' : 'http://'
+		# produce the correct @baseuri
+		@baseuri = prefix + cleanuri
 		@options = { :headers => { "Authorization" => "Token token=\"#{apikey}\"" }, :base_uri => HTTParty.normalize_base_uri(@baseuri) }
 	end
 	
@@ -67,7 +75,7 @@ class AtlasClient
 	def subscribe_quotes(&block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("https://#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}:4000/api")
 				client.subscribe("/quotes") do |msg|
 					block.call(msg)
 				end
@@ -78,7 +86,7 @@ class AtlasClient
 	def subscribe_trades(&block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("https://#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}:4000/api")
 				client.subscribe("/trades") do |msg|
 					begin
 						pmsg = JSON.parse(msg)
@@ -90,11 +98,11 @@ class AtlasClient
 			}
 		end
 	end
-	
+
 	def subscribe_book_updates(item, currency, &block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("https://#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}:4000/api")
 				client.subscribe("/market/#{item}/#{currency}") do |msg|
 					pmsg = nil
 					begin
