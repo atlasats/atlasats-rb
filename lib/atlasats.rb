@@ -26,6 +26,10 @@ class AtlasClient
 		r = block.call(body.nil? ? @options : @options.merge(:body => body))
 		r.parsed_response
 	end
+
+	def with_auth_query(body=nil, &block)
+		r = block.call(body.nil? ? @options : @options.merge(:query => body))
+	end
 	
 	def place_market_order(item, currency, side, quantity)
 		with_auth :item => item, :currency => currency, :side => side, :quantity => quantity, :type => "market" do |options|
@@ -40,7 +44,7 @@ class AtlasClient
 	end
 	
 	def order_info(orderid)
-		with_auth nil do |options|
+		with_auth_query nil do |options|
 			self.class.get("/api/v1/orders/#{orderid}", options)
 		end
 	end
@@ -53,21 +57,21 @@ class AtlasClient
 	
 	# account
 	def account_info()
-		with_auth nil do |options|
+		with_auth_query nil do |options|
 			self.class.get('/api/v1/account', options)
 		end
 	end
 
 	# market data
 	def book(item, currency)
-		with_auth :item => item, :currency => currency do
-			self.class.get('/api/v1/market/book')
+		with_auth_query :item => item, :currency => currency do |options|
+			self.class.get('/api/v1/market/book', options)
 		end
 	end
 
 	def recent_trades(item, currency)
-		with_auth :item => item, :currency => currency do
-			self.class.get('/api/v1/market/trades/recent')
+		with_auth_query :item => item, :currency => currency do |options|
+			self.class.get('/api/v1/market/trades/recent', options)
 		end
 	end
 	
