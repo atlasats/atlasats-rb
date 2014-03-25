@@ -77,17 +77,6 @@ class AtlasClient
 	end
 	
 	# market data
-	def subscribe_quotes(&block)
-		Thread.new do
-			EM.run {
-				client = Faye::Client.new("#{@baseuri}:4000/api")
-				client.subscribe("/quotes") do |msg|
-					block.call(msg)
-				end
-			}
-		end
-	end
-	
 	def subscribe_trades(&block)
 		Thread.new do
 			EM.run {
@@ -104,15 +93,35 @@ class AtlasClient
 		end
 	end
 
+	def subscribe_trades(item, currency, &block)
+		Thread.new do
+			EM.run {
+				client = Faye::Client.new("#{@baseuri}:4000/api")
+				client.subscribe("/trades") do |msg|
+					begin
+						pmsg = JSON.parse(msg)
+						if pmsg["symbol"] == item and pmsg["currency"] == currency
+							block.call(msg)
+						end
+					rescue Exception
+						block.call({ :error => "Unable to parse message", :raw => msg })
+					end
+				end
+			}
+		end
+	end
+
 	def subscribe_book_updates(item, currency, &block)
 		Thread.new do
 			EM.run {
 				client = Faye::Client.new("#{@baseuri}:4000/api")
-				client.subscribe("/market/#{item}/#{currency}") do |msg|
+				client.subscribe("/market") do |msg|
 					pmsg = nil
 					begin
 						pmsg = JSON.parse(msg)
-						block.call(pmsg)
+						if pmsg["symbol"] == item and pmsg["currency"] == currency
+							block.call(pmsg)
+						end
 					rescue Exception
 						block.call({ :error => "Unable to parse message", :raw => msg })
 					end
