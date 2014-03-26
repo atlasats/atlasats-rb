@@ -10,18 +10,8 @@ require './util'
 
 
 
-# Provide the URI of the Atlas server
-uri = 'test.atlasats.com'
-
-## API key associated with the account:
-# When logged in to the website, see in top-right corner of home page "<your name> -> Settings"
-# At bottom-left of the setting page, find the "API Access" section and:
-# - click "Enable"
-# - retrieve your API key and use below
-key = "17ee0d91cc103a0670536ed828e3c14e"
-
-# Instantiating an API client object
-client = AtlasClient.new(uri, key)
+# See helper class 'Util' in util.rb
+client = Util.logon
 
 # Send subscription to 'BTC' book updates
 client.subscribe_book_updates "BTC", "USD" do |update|
