@@ -63,7 +63,30 @@ class AtlasClient
 		end
 	end
 
-	# market data
+	# get all crypto-currency/coins
+	def coins ()
+		res = with_auth_query nil do |options|
+			self.class.get('/api/v1/market/symbols', options)
+		end
+		coins = []
+		res.each do |symbol|
+			coins.push symbol if symbol["market_id"] == 0
+		end
+		coins
+	end
+
+	# get all option contracts
+	def options ()
+		res = with_auth_query nil do |options|
+			self.class.get('/api/v1/market/symbols', options)
+		end
+		contracts = []
+		res.each do |symbol|
+			contracts.push symbol if symbol["exp"]
+		end
+		contracts
+	end
+
 	def book(item, currency)
 		with_auth_query :item => item, :currency => currency do |options|
 			self.class.get('/api/v1/market/book', options)
