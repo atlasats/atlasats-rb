@@ -100,7 +100,7 @@ class AtlasClient
 	end
 	
 	# market data
-	def subscribe_trades(&block)
+	def subscribe_all_trades(&block)
 		Thread.new do
 			EM.run {
 				client = Faye::Client.new("#{@baseuri}:4000/api")
