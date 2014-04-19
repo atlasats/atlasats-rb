@@ -58,7 +58,7 @@ class AtlasClient
 	
 	# For most accounts this will return todays orders both (open, cancelled and done except rejects)
 	# but for some users who do alot of orders you can only rely on it to give you open orders
-	def recent_orders(orderid)
+	def recent_orders()
 	  with_auth nil do |options|
 	    self.class.get("/api/v1/orders", options)
     end
