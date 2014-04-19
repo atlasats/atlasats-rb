@@ -56,6 +56,14 @@ class AtlasClient
 		end
 	end
 	
+	# For most accounts this will return todays orders both (open, cancelled and done except rejects)
+	# but for some users who do alot of orders you can only rely on it to give you open orders
+	def recent_orders(orderid)
+	  with_auth nil do |options|
+	    self.class.get("/api/v1/orders", options)
+    end
+	end
+	
 	# account
 	def account_info()
 		with_auth_query nil do |options|
@@ -119,7 +127,7 @@ class AtlasClient
 	def subscribe_trades(item, currency, &block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}/api/v1/streaming")
 				client.subscribe("/trades") do |msg|
 					begin
 						pmsg = JSON.parse(msg)
@@ -137,7 +145,7 @@ class AtlasClient
 	def subscribe_book_updates(item, currency, &block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}/api/v1/streaming")
 				client.subscribe("/market") do |msg|
 					pmsg = nil
 					begin
