@@ -7,6 +7,7 @@ Installation
 	gem install atlasats
 
 Usage WebSockets
+----------------
 
 Initialize the client
 	EM.run {
