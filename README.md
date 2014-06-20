@@ -10,7 +10,8 @@ Usage WebSockets
 ----------------
 
 Initialize the client
-	EM.run {
+
+		EM.run {
 		client = AtlasRealtimeClient.new('http://test.atlasats.com/api/v1/streaming', 'API_KEY', 'API_SECRET', API_ACCOUNT)
 
 		client.subscribe_trades do |trade|
@@ -31,7 +32,7 @@ Initialize the client
 			puts "placing limit order"
 			$client.place_limit_order "client_order_id", "BTC", "USD", "SELL", 1, 450.50
 		}
-	}
+		}
 
 
 Usage REST
