@@ -6,8 +6,35 @@ Installation
 
 	gem install atlasats
 
-Usage
------
+Usage WebSockets
+
+Initialize the client
+	EM.run {
+		client = AtlasRealtimeClient.new('http://test.atlasats.com/api/v1/streaming', 'API_KEY', 'API_SECRET', API_ACCOUNT)
+
+		client.subscribe_trades do |trade|
+			puts "trade: #{trade.inspect}"
+		end
+
+		client.subscribe_book do |book|
+			puts "book: #{book.inspect}"
+		end
+
+		client.subscribe_orders do |order|
+			puts "order update"
+			puts "\tclient id: #{order[\"oid\"]}"
+			puts "\tdata: #{order.inspect}"
+		end
+
+		EventMachine.add_timer 10, proc {
+			puts "placing limit order"
+			$client.place_limit_order "client_order_id", "BTC", "USD", "SELL", 1, 450.50
+		}
+	}
+
+
+Usage REST
+---------
 
 Initialize the client
 
