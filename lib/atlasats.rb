@@ -1,4 +1,4 @@
-orequire 'rubygems'
+require 'rubygems'
 require 'bundler/setup'
 require 'eventmachine'
 require 'httparty'
