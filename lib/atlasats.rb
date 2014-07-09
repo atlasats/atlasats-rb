@@ -111,7 +111,7 @@ class AtlasClient
 	def subscribe_all_trades(&block)
 		Thread.new do
 			EM.run {
-				client = Faye::Client.new("#{@baseuri}:4000/api")
+				client = Faye::Client.new("#{@baseuri}/api/v1/streaming")
 				client.subscribe("/trades") do |msg|
 					begin
 						pmsg = JSON.parse(msg)
